@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/inventory")
@@ -19,8 +20,13 @@ public class ShoesController {
     private ShoesDAO dao;
 
     @GetMapping("/shoes")
-    public ResponseEntity<List<Shoe>> loadShoes(){
-        return new ResponseEntity<>(dao.loadShoes(), HttpStatus.OK);
+    public ResponseEntity<List<Shoe>> loadShoes(@RequestParam(required = false) String brand){
+        List<Shoe> result = dao.loadShoes();
+
+        if(null != brand && !brand.isEmpty())
+            result = result.stream().filter(shoe -> shoe.getBrand().equalsIgnoreCase(brand)).collect(Collectors.toList());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/shoes")
@@ -36,7 +42,7 @@ public class ShoesController {
     }
 
     @PostMapping("/shoes/sell")
-    public ResponseEntity<ShoeSale> addShoe(@RequestBody ShoeSale sale){
+    public ResponseEntity<ShoeSale> addShoeSale(@RequestBody ShoeSale sale){
         try {
             dao.addShoeSale(sale);
             return new ResponseEntity<>(sale, HttpStatus.CREATED);
@@ -48,10 +54,10 @@ public class ShoesController {
     }
 
     @PutMapping("/shoes")
-    public ResponseEntity<String> updateShoe(@RequestBody Shoe shoe){
+    public ResponseEntity<Shoe> updateShoe(@RequestBody Shoe shoe){
 
         dao.updateShoe(shoe);
-        return ResponseEntity.ok("updated.");
+        return new ResponseEntity<>(shoe, HttpStatus.OK);
 
     }
 

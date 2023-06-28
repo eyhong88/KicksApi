@@ -8,7 +8,6 @@ public class KicksApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(KicksApiApplication.class, args);
-		System.out.println("hi");
 	}
 
 }
