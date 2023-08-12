@@ -84,14 +84,14 @@ public class ShoesController {
         return ResponseEntity.ok(shoe);
     }
 
-    @GetMapping("/shoes/sale")
+    @GetMapping("/shoes/sold")
     public ResponseEntity<List<ShoeSale>> getShoeSales(){
 
         List<ShoeSale> shoeSales = dao.getShoeSales();
         return new ResponseEntity<>(shoeSales, HttpStatus.OK);
     }
 
-    @GetMapping("/shoes/sale/totals")
+    @GetMapping("/shoes/sold/totals")
     public ResponseEntity<Sales> getSalesTotal()  {
 
         List<ShoeSale> shoeSales = dao.getShoeSales();
