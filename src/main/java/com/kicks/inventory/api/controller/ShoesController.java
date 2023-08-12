@@ -1,5 +1,8 @@
 package com.kicks.inventory.api.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kicks.inventory.api.Sales;
 import com.kicks.inventory.api.Shoe;
 import com.kicks.inventory.api.ShoeSale;
 import com.kicks.inventory.api.dao.ShoesDAO;
@@ -17,14 +20,29 @@ import java.util.stream.Collectors;
 public class ShoesController {
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private ShoesDAO dao;
 
     @GetMapping("/shoes")
-    public ResponseEntity<List<Shoe>> loadShoes(@RequestParam(required = false) String brand){
+    public ResponseEntity<List<Shoe>> loadShoes(@RequestParam(required = false) String brand,
+                                                @RequestParam(required = false) String styleCode,
+                                                @RequestParam(required = false) String colorWay,
+                                                @RequestParam(required = false) String model){
         List<Shoe> result = dao.loadShoes();
 
         if(null != brand && !brand.isEmpty())
             result = result.stream().filter(shoe -> shoe.getBrand().equalsIgnoreCase(brand)).collect(Collectors.toList());
+
+        if(null != styleCode && !styleCode.isEmpty())
+            result = result.stream().filter(shoe -> shoe.getStyleCode().equalsIgnoreCase(styleCode)).collect(Collectors.toList());
+
+        if(null != model && !model.isEmpty())
+            result = result.stream().filter(shoe -> shoe.getModel().toLowerCase().contains(model.toLowerCase())).collect(Collectors.toList());
+
+        if(null != colorWay && !colorWay.isEmpty())
+            result = result.stream().filter(shoe -> shoe.getColorway().toLowerCase().contains(colorWay.toLowerCase())).collect(Collectors.toList());
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -66,5 +84,24 @@ public class ShoesController {
 
         Shoe shoe = dao.getShoe(sku);
         return ResponseEntity.ok(shoe);
+    }
+
+    @GetMapping("/shoes/sale")
+    public ResponseEntity<List<ShoeSale>> getShoeSales(){
+
+        List<ShoeSale> shoeSales = dao.getShoeSales();
+        return new ResponseEntity<>(shoeSales, HttpStatus.OK);
+    }
+
+    @GetMapping("/shoes/sale/totals")
+    public ResponseEntity<Sales> getSalesTotal()  {
+
+        List<ShoeSale> shoeSales = dao.getShoeSales();
+        int count = shoeSales.size();
+        double totalSales = shoeSales.stream().mapToDouble(ShoeSale::getPrice).sum();
+        double avgSalesAmt = totalSales / count;
+        double totalPayout = shoeSales.stream().mapToDouble(ShoeSale::getTotalPayout).sum();
+
+        return new ResponseEntity<>(new Sales(count, totalSales, avgSalesAmt, totalPayout), HttpStatus.OK);
     }
 }

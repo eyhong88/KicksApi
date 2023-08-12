@@ -65,12 +65,14 @@ public class ShoesDAO {
         }
     }
     public void addShoeSale(ShoeSale sale) {
-        String sql = "INSERT INTO shoe_sale (sku, price, sale_date) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO shoe_sale (sku, sale_price, sale_date, vendor_id, total_payout) VALUES (?, ?, ?, ?, ?)";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, sale.getSku());
             stmt.setDouble(2, sale.getPrice());
             stmt.setDate(3, Date.valueOf(sale.getSaleDate()));
+            stmt.setInt(4, sale.getVendorId());
+            stmt.setDouble(5, sale.getTotalPayout());
             stmt.executeUpdate();
             stmt.close();
         } catch (SQLException e) {
@@ -128,5 +130,24 @@ public class ShoesDAO {
         }
 
         return null;
+    }
+
+    public List<ShoeSale> getShoeSales() {
+        List<ShoeSale> shoeList = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery("SELECT sku, sale_price, total_payout FROM shoe_sale");
+            while(resultSet.next()){
+                String sku = resultSet.getString("sku");
+                double salePrice = resultSet.getDouble("sale_price");
+                double totalPayout = resultSet.getDouble("total_payout");
+                shoeList.add(new ShoeSale(sku, salePrice, totalPayout));
+            }
+            stmt.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return shoeList;
     }
 }
