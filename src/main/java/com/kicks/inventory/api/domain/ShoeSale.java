@@ -1,4 +1,4 @@
-package com.kicks.inventory.api;
+package com.kicks.inventory.api.domain;
 
 import java.time.LocalDate;
 

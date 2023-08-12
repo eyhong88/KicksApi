@@ -1,7 +1,7 @@
 package com.kicks.inventory.api.dao;
 
-import com.kicks.inventory.api.Shoe;
-import com.kicks.inventory.api.ShoeSale;
+import com.kicks.inventory.api.domain.Shoe;
+import com.kicks.inventory.api.domain.ShoeSale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

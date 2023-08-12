@@ -1,4 +1,4 @@
-package com.kicks.inventory.api;
+package com.kicks.inventory.api.domain;
 
 public class Shoe {
     private double size;

@@ -1,4 +1,4 @@
-package com.kicks.inventory.api;
+package com.kicks.inventory.api.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
