@@ -96,7 +96,7 @@ public class ShoesController {
 
         List<ShoeSale> shoeSales = dao.getShoeSales();
         int count = shoeSales.size();
-        double totalSales = shoeSales.stream().mapToDouble(ShoeSale::getPrice).sum();
+        double totalSales = shoeSales.stream().mapToDouble(ShoeSale::getSalePrice).sum();
         double avgSalesAmt = totalSales / count;
         double totalPayout = shoeSales.stream().mapToDouble(ShoeSale::getTotalPayout).sum();
 

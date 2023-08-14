@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,9 +121,7 @@ public class ShoesDAO {
                 String styleCode = resultSet.getString("style_code");
                 String sku = resultSet.getString("sku");
 
-                Shoe shoe = new Shoe(estSalePrice, colorway, size, model, brand, price, quantity, styleCode, sku);
-
-                return shoe;
+                return new Shoe(estSalePrice, colorway, size, model, brand, price, quantity, styleCode, sku);
             }
 
         } catch (SQLException e) {
@@ -136,12 +135,21 @@ public class ShoesDAO {
         List<ShoeSale> shoeList = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT sku, sale_price, total_payout FROM shoe_sale");
+            ResultSet resultSet = stmt.executeQuery("SELECT si.brand, si.model, si.colorway, si.size, si.price, si.style_code, si.sku, ss.* FROM shoe_inventory si, shoe_sale ss WHERE si.sku = ss.sku;");
             while(resultSet.next()){
+                String brand = resultSet.getString("brand");
+                String model = resultSet.getString("model");
+                String colorway = resultSet.getString("colorway");
+                int size = resultSet.getInt("size");
+                double price = resultSet.getDouble("price");
+                String style_code = resultSet.getString("style_code");
                 String sku = resultSet.getString("sku");
                 double salePrice = resultSet.getDouble("sale_price");
                 double totalPayout = resultSet.getDouble("total_payout");
-                shoeList.add(new ShoeSale(sku, salePrice, totalPayout));
+                int vendorId = resultSet.getInt("vendor_id");
+                String saleDate = resultSet.getDate("sale_date").toLocalDate().toString();
+                int id = resultSet.getInt("id");
+                shoeList.add(new ShoeSale(id, saleDate, vendorId, brand, model, colorway, size, price, style_code, sku, salePrice, totalPayout));
             }
             stmt.close();
         } catch (SQLException e) {
