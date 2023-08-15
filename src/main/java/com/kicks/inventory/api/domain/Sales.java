@@ -6,6 +6,7 @@ public class Sales {
     private double avgSaleAmount;
     private double totalPayout;
 
+    public Sales(){}
     public Sales(int salesCount, double salesTotal, double avgSaleAmount, double totalPayout){
         this.salesCount = salesCount;
         this.salesTotal = salesTotal;

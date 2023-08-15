@@ -12,6 +12,8 @@ public class Shoe {
 
     private String colorway;
 
+    public Shoe(){}
+
     public Shoe(double estSalePrice, String colorway, double size, String model, String brand, double price, int quantity, String styleCode, String sku) {
         this.model = model;
         this.brand = brand;

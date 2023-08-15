@@ -2,6 +2,7 @@ package com.kicks.inventory.api.dao;
 
 import com.kicks.inventory.api.domain.Shoe;
 import com.kicks.inventory.api.domain.ShoeSale;
+import com.kicks.inventory.api.domain.Vendor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -157,5 +158,28 @@ public class ShoesDAO {
         }
 
         return shoeList;
+    }
+
+    public List<Vendor> getVendors() {
+        List<Vendor> result = new ArrayList<>();
+
+        String sql = "SELECT id, vendor_name, vendor_fee FROM sale_vendor";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String vendorName = resultSet.getString("vendor_name");
+                double vendorFee = resultSet.getDouble("vendor_fee");
+
+                result.add(new Vendor(id, vendorName, vendorFee));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
     }
 }

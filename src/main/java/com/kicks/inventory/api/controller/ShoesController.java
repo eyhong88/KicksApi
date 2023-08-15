@@ -5,6 +5,7 @@ import com.kicks.inventory.api.domain.Sales;
 import com.kicks.inventory.api.domain.Shoe;
 import com.kicks.inventory.api.domain.ShoeSale;
 import com.kicks.inventory.api.dao.ShoesDAO;
+import com.kicks.inventory.api.domain.Vendor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,7 @@ public class ShoesController {
 
     @PostMapping("/shoes")
     public ResponseEntity<Shoe> addShoe(@RequestBody Shoe shoe){
+        System.out.println("Inside addShoe for " + shoe.getSku());
         try {
             dao.addShoe(shoe);
             return new ResponseEntity<>(shoe, HttpStatus.CREATED);
@@ -59,6 +61,7 @@ public class ShoesController {
 
     @PostMapping("/shoes/sell")
     public ResponseEntity<ShoeSale> addShoeSale(@RequestBody ShoeSale sale){
+        System.out.println("Inside addShoeSale for " + sale.getSku());
         try {
             dao.addShoeSale(sale);
             return new ResponseEntity<>(sale, HttpStatus.CREATED);
@@ -71,6 +74,7 @@ public class ShoesController {
 
     @PutMapping("/shoes")
     public ResponseEntity<Shoe> updateShoe(@RequestBody Shoe shoe){
+        System.out.println("Inside updateShoe for " + shoe.getSku());
 
         dao.updateShoe(shoe);
         return new ResponseEntity<>(shoe, HttpStatus.OK);
@@ -79,11 +83,20 @@ public class ShoesController {
 
     @GetMapping("/shoes/{sku}")
     public ResponseEntity<Shoe> getShoe(@PathVariable String sku){
+        System.out.println("Inside getShoe for " + sku);
 
         Shoe shoe = dao.getShoe(sku);
         return ResponseEntity.ok(shoe);
     }
 
+
+    @GetMapping("/shoes/vendors")
+    public ResponseEntity<List<Vendor>> getVendors(){
+        System.out.println("Inside getVendors");
+
+        List<Vendor> vendors = dao.getVendors();
+        return ResponseEntity.ok(vendors);
+    }
     @GetMapping("/shoes/sold")
     public ResponseEntity<List<ShoeSale>> getShoeSales(){
 
@@ -93,6 +106,7 @@ public class ShoesController {
 
     @GetMapping("/shoes/sold/totals")
     public ResponseEntity<Sales> getSalesTotal()  {
+        System.out.println("Inside getSalesTotal");
 
         List<ShoeSale> shoeSales = dao.getShoeSales();
         int count = shoeSales.size();

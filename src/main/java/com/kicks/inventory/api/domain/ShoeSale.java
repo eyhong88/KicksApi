@@ -17,6 +17,8 @@ public class ShoeSale {
     private double salePrice;
     private String styleCode;
 
+    public ShoeSale(){}
+
     public ShoeSale(String sku, double salePrice, String saleDate, int vendorId, double totalPayout) {
         this.sku = sku;
         this.salePrice = salePrice;
